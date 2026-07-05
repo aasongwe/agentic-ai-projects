@@ -1,1 +1,1 @@
-my first projest
+my first project
