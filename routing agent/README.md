@@ -1,5 +1,3 @@
-Here is a well-structured, production-ready GitHub README.md file updated specifically for your Intelligent Message Routing Agent project.
-
 🔀 Intelligent Message Routing Agent
 Automated LLM-Powered Intent Classification & Operations Architecture
 An enterprise-grade, event-driven multi-agent workflow that processes, filters, and routes unstructured incoming communication. Built on an LLM-orchestrated architecture, this pipeline classifies user intent, extracts structured metadata, and executes deterministic handoffs to downstream databases (Google Sheets) with strict execution guarantees.
