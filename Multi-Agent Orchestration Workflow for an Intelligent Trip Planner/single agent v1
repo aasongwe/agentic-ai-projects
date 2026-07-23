@@ -1,0 +1,117 @@
+{
+  "name": "Single Agent (V1)",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -112,
+        -96
+      ],
+      "id": "12fff523-04b3-4ac9-a7c0-3c58de513b26",
+      "name": "Chat Input",
+      "webhookId": "6d18d812-49f1-4361-8d69-50987ec657a6"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        128
+      ],
+      "id": "89ac34ad-ad16-418c-bd69-ae49a127ad6d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "IzarqPUxagZ5ZxJy",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        144
+      ],
+      "id": "c0e645a4-e881-4cd2-884a-d420f9a040c7",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an intelligent Trip Planner AI. You handle flights, hotels, and activities within a single reasoning process.\n\nYour task is to:\nUnderstand the user’s travel goals and constraints. Plan flights, accommodations, and daily activities. Ensure schedule consistency (arrival times, check-in/check-out, activity timing). Optimize for user preferences (budget, comfort, convenience, interests). Produce a complete, structured itinerary.\n\nYou must reason across all domains (transportation, lodging, experiences) internally.\n\nNo external tools or APIs are available. Do not mention system limitations. Make realistic assumptions when required."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        96,
+        -96
+      ],
+      "id": "45199c73-18fc-48b3-b6c4-6f1c6b457659",
+      "name": "Travel Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Input": {
+      "main": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5892f8ff-d5ad-4051-b552-ce6924a7740d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f8915628d001c9f12c477501d438b0ef663b51074cad39b3fe2c37a0f1ebd929"
+  },
+  "id": "1GnzASwqX7sPiUiJ",
+  "tags": []
+}

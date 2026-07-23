@@ -1,0 +1,444 @@
+{
+  "name": "Multi Agent (V3) - Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2432,
+        736
+      ],
+      "id": "dc57c790-ea2c-4f43-8c85-852f47d22535",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "RAiNGPEspWX9b36J",
+          "name": "OpenAi account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chatInput"
+            },
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        2304,
+        528
+      ],
+      "id": "65cf8a3e-1bbd-4b5e-9d78-c53864779ee8",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "google_hotels",
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', `q parameter cannot be empty. Fill in with the destination city where we need to find hotels.`, 'string') }}",
+        "check_in_date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Check-in_Date__check_in_date_', `check_in_date cannot be in the past. `, 'string') }}",
+        "check_out_date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Check-out_Date__check_out_date_', `check_out_date should be greater than the check_in_date`, 'string') }}",
+        "additionalFields": {
+          "hotel_class": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Hotel_Class__hotel_class_', `If we have the hotel star ratings, then include it here. `, 'string') }}"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        3264,
+        944
+      ],
+      "id": "b8b320af-fcdd-4635-aed1-184829798a79",
+      "name": "Hotels",
+      "credentials": {
+        "serpApi": {
+          "id": "Zu8cGkFMmSrttG5a",
+          "name": "IK_Serp_API_Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Flights AI Agent that can call other tools",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are a Flights Search Agent.\n\nInput: Origin, destination, dates, traveler count, flight preferences.\n\nUse the Flights tool once.\n\nGenerate 4–6 viable round-trip options.\nInclude a mix of non-stop and 1-stop (if relevant).\nInclude airline, departure/arrival times, duration, stops, and estimated total price.\n\nDo not explain reasoning."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        2784,
+        752
+      ],
+      "id": "bbdb1c12-8fba-4d90-9843-e56a42c146e7",
+      "name": "Flights Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Hotels AI Agent that can call other tools",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are a Hotels Search Agent.\n\nInput: Destination, check-in/out dates, travelers, hotel preferences.\n\nUse the Hotels tool once.\n\nGenerate 5-7 hotel options aligned with travel_style and budget.\nInclude rating, area, price per night, estimated total stay cost.\n\nAlign with travel_style and budget if provided.\n\nPrefer 4 star+ when budget allows.\n\nNo explanations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        3072,
+        752
+      ],
+      "id": "36fdcb2c-2f64-4b8e-bc2c-8a0a2745cbcb",
+      "name": "Hotels Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2656,
+        960
+      ],
+      "id": "28225f07-065a-4a24-9d73-1096bef2e503",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "RAiNGPEspWX9b36J",
+          "name": "OpenAi account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3104,
+        976
+      ],
+      "id": "c02b2c26-3edd-4712-b842-d32f56ec5ffe",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "RAiNGPEspWX9b36J",
+          "name": "OpenAi account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the Trip Planning Orchestrator.\n\nInput: Structured trip request (origin, destination, dates, travelers, budget, preferences).\n\nYOUR JOB:\n\nCall Flights Agent, Hotels Agent, and Activities Agent once each.\nEnsure outputs align with travel dates.\nCombine results into a structured itinerary.\nPresent a clean final plan.\n\nDo not deeply re-optimize domain outputs.\nDo not generate options yourself.\nDo not call agents multiple times unless critical data is missing.\nDo not explain internal reasoning."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2800,
+        528
+      ],
+      "id": "01d3751d-d9d3-4250-b0be-b18cc799791d",
+      "name": "Travel Agent (Orchestrator)"
+    },
+    {
+      "parameters": {
+        "operation": "google_flights",
+        "departure_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Departure_airport_code___location_kgmid__departure_id_', `departure_id is a mandatory field. Fill in the airport code (or the nearest airport code) of the departure city.`, 'string') }}",
+        "arrival_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Arrival_airport_code___location_kgmid__arrival_id_', `arrival_id is a mandatory field. Fill in the airport code (or the nearest airport) of the destination city.`, 'string') }}",
+        "outbound_date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Outbound_Date__outbound_date_', `outbound_date is a mandatory field. Fill in the departure date. Make sure it is not in the past.`, 'string') }}",
+        "return_date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_Date__return_date_', `return_date is a mandatory field. Fill in the return date. Make sure it is not in the past and is greater than the outbound_date`, 'string') }}",
+        "additionalFields": {
+          "adults": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Number_of_Adults__adults_', ``, 'number') }}"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        2928,
+        928
+      ],
+      "id": "901c869c-48d6-430c-b8e6-d1e8c3f95709",
+      "name": "Flights",
+      "credentials": {
+        "serpApi": {
+          "id": "Zu8cGkFMmSrttG5a",
+          "name": "IK_Serp_API_Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Activities AI Agent that can call other tools",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an Activities Agent.\n\nInput: Destination, trip duration, user preferences.\n\nUse the Activities tool and the Tavily Search tool once and consolidate the results.\n\nYOUR JOB IS TO:\nGenerate 8–12 activity options.\nInclude a mix of top attractions and unique/local experiences.\nGroup loosely by day (no strict optimization yet).\n\nNo explanations.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        3424,
+        768
+      ],
+      "id": "3782863b-c24e-4ea1-862c-de19ce9170a5",
+      "name": "Activities Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3408,
+        1008
+      ],
+      "id": "308117c5-c0c6-4e6d-a9c4-5d8425e00f98",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "RAiNGPEspWX9b36J",
+          "name": "OpenAi account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "google_local",
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', `Search for popular sight seeing activities and things to do at the destination city and near by.`, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', `Fill in the destination city`, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        3776,
+        960
+      ],
+      "id": "7172bcbe-6d69-46f2-8a65-c3ac24752cf8",
+      "name": "Activities",
+      "credentials": {
+        "serpApi": {
+          "id": "Zu8cGkFMmSrttG5a",
+          "name": "IK_Serp_API_Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Fill in the search query for the specific city. For example: List me the top attractions to visit and top activities in San Fransisco.`, 'string') }}"
+            },
+            {
+              "name": "include_answer",
+              "value": "basic"
+            },
+            {
+              "name": "api_key",
+              "value": "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"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        3616,
+        976
+      ],
+      "id": "364720fe-0ad7-4fa9-9b1a-6246fecf11e2",
+      "name": "Tavily Search"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Travel Agent (Orchestrator)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Travel Agent (Orchestrator)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hotels": {
+      "ai_tool": [
+        [
+          {
+            "node": "Hotels Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flights Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Travel Agent (Orchestrator)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hotels Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Travel Agent (Orchestrator)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Flights Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Hotels Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flights": {
+      "ai_tool": [
+        [
+          {
+            "node": "Flights Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activities Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Travel Agent (Orchestrator)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Activities Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activities": {
+      "ai_tool": [
+        [
+          {
+            "node": "Activities Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Activities Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f6a0c44e-a2ad-4e71-8168-44feed140627",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f8915628d001c9f12c477501d438b0ef663b51074cad39b3fe2c37a0f1ebd929"
+  },
+  "id": "ep2cv0FLbQlwZKmN",
+  "tags": []
+}

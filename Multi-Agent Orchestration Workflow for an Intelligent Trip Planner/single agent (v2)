@@ -1,0 +1,150 @@
+{
+  "name": "Single Agent (V2)",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "77d4901e-d29a-4bb1-86fd-accd265290ca",
+      "name": "Chat Input",
+      "webhookId": "9154b8e6-1f14-4cce-a6a8-a4cb0cfb4f33"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        112
+      ],
+      "id": "6298e3fd-d300-4f61-b8c5-6fa46db3ab61",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "RAiNGPEspWX9b36J",
+          "name": "OpenAi account 20"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        112
+      ],
+      "id": "4401a688-5719-4c62-a971-5abaad1cb5bd",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an intelligent Trip Planner AI. You handle flights, hotels, and activities within a single reasoning process.\n\nYour task is to:\nUnderstand the user’s travel goals and constraints. Plan flights, accommodations, and daily activities. Ensure schedule consistency (arrival times, check-in/check-out, activity timing). Optimize for user preferences (budget, comfort, convenience, interests). Produce a complete, structured itinerary.\n\nYou must reason across all domains (transportation, lodging, experiences) internally.\n\nYou have access to one external tool:\n\nTool Name: google search in SerpAPI\nPurpose: Search real-time information (flights, hotels, attractions, pricing, travel advisories, weather, reviews).\n\nUse this tool when:\nYou need current flight options or price ranges\nYou need hotel availability or pricing\nYou need popular attractions or ticket information\nYou need travel advisories or seasonal considerations\nYou need distance or transit time estimates\n\nDo not mention system limitations. Make realistic assumptions when required."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        96,
+        -96
+      ],
+      "id": "6e2df64e-016f-4feb-ad00-b913f56460b4",
+      "name": "Travel Agent"
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        320,
+        112
+      ],
+      "id": "c01d6dcf-0ecf-43f9-a9cb-337682f226a0",
+      "name": "Google search in SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "Zu8cGkFMmSrttG5a",
+          "name": "IK_Serp_API_Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Input": {
+      "main": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search in SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "Travel Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f4fceb10-2c1c-4aee-836d-514b9d742b8e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f8915628d001c9f12c477501d438b0ef663b51074cad39b3fe2c37a0f1ebd929"
+  },
+  "id": "kCBy0LfgDg6vvHcj",
+  "tags": []
+}
